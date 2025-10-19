@@ -1,0 +1,67 @@
+with open('input.txt', 'r') as inp:
+    info = inp.readlines()
+
+info0 = info[0].strip('\n').split(' ')
+
+a = int(info0[0])
+b = int(info0[1])
+
+info1 = info[1].strip('\n').split(' ')
+info2 = info[2].split(' ')
+
+elements = {}
+for i in range(0, a):
+    local_list = []
+    local_list.append(int(info1[i]))
+    local_list.append(int(info2[i]))
+    elements.update({str(i): local_list})
+
+
+my_list = list(elements.keys())
+list_length = len(my_list)
+
+for x in my_list:
+    x = int(x)
+    if x > a:
+        list_length -= list_length
+        elements.pop(x)
+
+
+
+
+bits = []
+sums = []
+for i in range(-2 ** len(my_list) + 1, 1):
+    i = -i
+    binary = bin(i).split("b")[1]
+    add_0 = len(my_list) - len(binary)
+    binary = "0" * add_0 + binary
+
+    sum_x = 0
+    sum_y = 0
+    index = 0
+    while True:
+        if binary[index] == "1":
+            key = str(index)
+            sum_x += elements[key][0]
+            sum_y += elements[key][1]
+            index += 1
+
+        else:
+            if index + 1 == len(binary):
+                index = 0
+                break
+
+            else:
+                index += 1
+                continue
+
+        if index == len(binary):
+            index = 0
+            break
+
+    if sum_x <= b:
+        sums.append(sum_y)
+
+with open('output.txt', 'w') as out:
+    out.write(str(max(sums)))
